@@ -10,4 +10,4 @@ The page, once rendered in the browser, will execute the Jasmine test suite.
 
 An example of a passing test suite looks like:
 
-![]()
+![](https://dl.dropboxusercontent.com/spa/lbv7q0z27j14pgl/2mqhyew2.png)

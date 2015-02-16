@@ -27,46 +27,109 @@ $(function() {
         });
 
 
-        /* TODO: Write a test that loops through each feed
+        /* This test loops through each feed
          * in the allFeeds object and ensures it has a URL defined
          * and that the URL is not empty.
          */
+        it('all contain a URL that is not empty', function() {
+            allFeeds.forEach(function(feed) {
+                expect(feed.url).toBeDefined();
+                expect(feed.url.length).not.toBe(0);
+            });
+        });
 
 
-        /* TODO: Write a test that loops through each feed
+        /* This test that loops through each feed
          * in the allFeeds object and ensures it has a name defined
          * and that the name is not empty.
          */
+         it('all contain a name that is not empty', function() {
+            allFeeds.forEach(function(feed) {
+                expect(feed.name).toBeDefined();
+                expect(feed.name.length).not.toBe(0);
+            });
+         });
     });
 
 
-    /* TODO: Write a new test suite named "The menu" */
+    /*
+    * The second test suite -- all about the menu.
+    */
+    describe('The menu', function() {
 
-        /* TODO: Write a test that ensures the menu element is
-         * hidden by default. You'll have to analyze the HTML and
-         * the CSS to determine how we're performing the
-         * hiding/showing of the menu element.
+        /* This test asserts that the body contains the class 'menu-hidden' by default.
+        * This is the menu's hidden class.
+        */
+        it('is hidden by default', function() {
+            expect($('body').attr("class")).toBe('menu-hidden');
+        });
+
+        /* TODO: Write a test that ensures the menu changes
+         * visibility when the menu icon is clicked. This test
+         * should have two expectations: does the menu display when
+         * clicked and does it hide when clicked again.
          */
+        it('toggles visibility when clicked', function() {
+            $(".icon-list").click();
+            expect($('body').attr("class")).not.toBe('menu-hidden');
 
-         /* TODO: Write a test that ensures the menu changes
-          * visibility when the menu icon is clicked. This test
-          * should have two expectations: does the menu display when
-          * clicked and does it hide when clicked again.
-          */
+            $(".icon-list").click();
+            expect($('body').attr("class")).toBe('menu-hidden');
+        });
+    });
 
-    /* TODO: Write a new test suite named "Initial Entries" */
+    /* Test suite named "Initial Entries" */
+    describe('Initial Entries', function() {
 
-        /* TODO: Write a test that ensures when the loadFeed
+        beforeEach(function(done) {
+            setTimeout(function() {
+                loadFeed(0);
+                done();
+            }, 300);
+        });
+
+        /* This test ensures when the loadFeed
          * function is called and completes its work, there is at least
          * a single .entry element within the .feed container.
-         * Remember, loadFeed() is asynchronous so this test wil require
-         * the use of Jasmine's beforeEach and asynchronous done() function.
          */
+        it('- loadFeed function appends entries to the feed container', function() {
+            var feed = $(".feed");
+            expect(feed.find(".entry").length).toBeGreaterThan(0);
+        });
+    });
 
-    /* TODO: Write a new test suite named "New Feed Selection"
+    /* Test suite -- all about new feeds */
+    describe('New Feed Selection', function() {
+        var initialText = '';
 
-        /* TODO: Write a test that ensures when a new feed is loaded
-         * by the loadFeed function that the content actually changes.
-         * Remember, loadFeed() is asynchronous.
-         */
+        // first load the initial feed
+        beforeEach(function (done) {
+            loadFeed(0);
+
+            // give it a bit of time to run before moving on
+            setTimeout(function() {
+                done();
+            }, 300);
+        });
+
+        // second get the result of the initial load and load the next feed
+        beforeEach(function (done) {
+            // store the result of the initial feed load 1st entry
+            initialText = $($(".feed").find(".entry")[0]).text();
+
+            // load the next feed
+            loadFeed(1);
+
+            // give it a bit of time to run before moving on
+            setTimeout(function() {
+                done();
+            }, 300);
+        });
+
+        // finally check that the text has changed from the initial state
+        it('changes the content of the feed list', function (done) {
+            expect($($(".feed").find(".entry")[0]).text()).not.toBe(initialText);
+            done();
+        });
+    });
 }());
